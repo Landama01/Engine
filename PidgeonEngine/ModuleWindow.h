@@ -4,6 +4,10 @@
 #include "Module.h"
 #include "SDL/include/SDL.h"
 
+#include "imgui.h"
+#include "imgui_impl_opengl3.h"
+#include "imgui_impl_sdl.h"
+
 class Application;
 
 class ModuleWindow : public Module

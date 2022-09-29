@@ -1,13 +1,11 @@
 
 #include "Globals.h"
+#include "glew\include\glew.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
 #include "Primitive.h"
-#include "glut/glut.h"
 #include "Globals.h"
 #include "Application.h"
-
-#pragma comment (lib, "glut/glut32.lib")
 
 // ------------------------------------------------------------
 Primitive::Primitive() : transform(IdentityMatrix), color(White), wire(false), axis(false), type(PrimitiveTypes::Primitive_Point)
@@ -17,11 +15,6 @@ Primitive::Primitive() : transform(IdentityMatrix), color(White), wire(false), a
 PrimitiveTypes Primitive::GetType() const
 {
 	return type;
-}
-
-void Primitive::Update()
-{
-    body.GetTransform(&transform);
 }
 
 // ------------------------------------------------------------
@@ -92,21 +85,18 @@ void Primitive::InnerRender() const
 void Primitive::SetPos(float x, float y, float z)
 {
 	transform.translate(x, y, z);
-	body.SetTransform(&transform);
 }
 
 // ------------------------------------------------------------
 void Primitive::SetRotation(float angle, const vec3 &u)
 {
 	transform.rotate(angle, u);
-	body.SetTransform(&transform);
 }
 
 // ------------------------------------------------------------
 void Primitive::Scale(float x, float y, float z)
 {
 	transform.scale(x, y, z);
-	body.SetTransform(&transform);
 }
 
 // CUBE ============================================
@@ -118,7 +108,6 @@ Cube::Cube() : Primitive(), size(1.0f, 1.0f, 1.0f)
 Cube::Cube(const vec3& _size, float mass) : Primitive(), size(_size)
 {
 	type = PrimitiveTypes::Primitive_Cube;
-	body.SetBody(this, mass);
 }
 
 
@@ -193,7 +182,6 @@ Sphere::Sphere(float radius) : Primitive(), radius(radius)
 Sphere::Sphere(float _radius, float mass) : Primitive(), radius(_radius)
 {
     type = PrimitiveTypes::Primitive_Sphere;
-    body.SetBody(this, mass);
 }
 
 float Sphere::GetRadius() const
@@ -203,7 +191,6 @@ float Sphere::GetRadius() const
 
 void Sphere::InnerRender() const
 {
-	glutSolidSphere(radius, 25, 25);
 }
 
 
