@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "imguiMenu.h"
 #include "ModuleWindow.h"
+#include "time.h"
 
 
 imguiMenu::imguiMenu(bool start_enabled) : Module(start_enabled)
@@ -25,6 +26,8 @@ bool imguiMenu::Start()
 		ret = false;
 	}
 
+	fps_log.push_back(5);
+
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -42,6 +45,8 @@ update_status imguiMenu::Update(float dt)
 	ImGui_ImplSDL2_NewFrame();
 	ImGui::NewFrame();
 
+	sprintf_s(title, 25, "Framerate %.1f", fps_log[fps_log.size() - 1]);	
+
 	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("Help"))
@@ -54,10 +59,14 @@ update_status imguiMenu::Update(float dt)
 		}
 	}	
 	ImGui::EndMainMenuBar();
+	
+	if (ImGui::Begin("Window"))
+	{			
+		ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, title, 0.0f, 200.0f, ImVec2(310, 100));		
 
-	ImGui::Begin("Window");
-	ImGui::Text("Prova prova prova prova");
-	ImGui::End();
+		ImGui::End();
+	}
+	
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

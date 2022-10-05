@@ -1,9 +1,11 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
+#include "imguiMenu.h"
 #include "SDL\include\SDL_opengl.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
+#include "time.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -125,6 +127,19 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 	SDL_GL_SwapWindow(App->window->window);
+
+	App->imgui->frame_count++;
+	App->imgui->final_time = time(NULL);
+	if (App->imgui->final_time - App->imgui->init_time > 0)
+	{
+		fps = (App->imgui->frame_count / (App->imgui->final_time - App->imgui->init_time));
+		App->imgui->fps_log.push_back(fps);
+
+		App->imgui->frame_count = 0;
+		App->imgui->init_time = App->imgui->final_time;	
+	}
+
+	
 	return UPDATE_CONTINUE;
 }
 
@@ -132,7 +147,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 bool ModuleRenderer3D::CleanUp()
 {
 	LOG("Destroying 3D Renderer");
-
+	
 	SDL_GL_DeleteContext(context);
 
 	return true;
