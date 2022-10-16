@@ -17,6 +17,9 @@ public:
 
 	bool Start();
 	update_status Update(float dt);
+
+	void AboutInfo();
+
 	bool CleanUp();
 
 private:
@@ -24,6 +27,10 @@ private:
 	char sdl_version[25];
 	char CPU[25];
 	char SystemRAM[25];
+	char MouseX[25];
+	char MouseY[25];
+
+	bool ShowAbout;
 
 	Uint32 flagsFullTrue = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN_DESKTOP;
 	Uint32 flagsFullFalse = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
