@@ -7,14 +7,15 @@
 #include "SDL/include/SDL_opengl.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
+
 #include "time.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 
-//ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled) : Module(app, start_enabled)
-ModuleRenderer3D::ModuleRenderer3D(bool start_enabled) : Module(start_enabled), context()
+ModuleRenderer3D::ModuleRenderer3D(bool start_enabled) : Module(start_enabled)
 {
+
 }
 
 // Destructor
@@ -40,6 +41,7 @@ bool ModuleRenderer3D::Init()
 
 	//print GLEW info
 	//LOG("Using Glew %s", glewGetString(GLEW_VERSION));
+
 	LOG("Vendor: %s", glGetString(GL_VENDOR));
 	LOG("Renderer: %s", glGetString(GL_RENDERER));
 	LOG("OpenGL version supported %s", glGetString(GL_VERSION));
