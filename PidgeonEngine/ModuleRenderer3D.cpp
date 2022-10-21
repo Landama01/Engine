@@ -12,6 +12,7 @@
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
+#pragma comment (lib, "Glew/libx86/glew32.lib")
 
 ModuleRenderer3D::ModuleRenderer3D(bool start_enabled) : Module(start_enabled)
 {
@@ -37,10 +38,10 @@ bool ModuleRenderer3D::Init()
 	}
 	
 	//init GLEW lib
-	//GLenum err = glewInit();
+	GLenum err = glewInit();
 
 	//print GLEW info
-	//LOG("Using Glew %s", glewGetString(GLEW_VERSION));
+	LOG("Using Glew %s", glewGetString(GLEW_VERSION));
 
 	LOG("Vendor: %s", glGetString(GL_VENDOR));
 	LOG("Renderer: %s", glGetString(GL_RENDERER));
