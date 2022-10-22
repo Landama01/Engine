@@ -14,10 +14,13 @@ public:
 
 	bool Init();
 	update_status PreUpdate(float dt);
+	update_status Update(float dt);
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
 	void OnResize(int width, int height);
+
+	void DrawCube(vec3 center);
 
 public:
 
@@ -28,4 +31,9 @@ public:
 
 	int fps;
 	int fps_cont = 0;
+
+private:
+	vec3 center;
+
+	double rotate_x;
 };

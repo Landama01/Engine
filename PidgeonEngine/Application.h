@@ -8,6 +8,7 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "imguiMenu.h"
+#include "LoadFBX.h"
 
 #include <vector>
 
@@ -19,6 +20,7 @@ public:
 	ModuleRenderer3D* renderer3D;
 	ModuleCamera3D* camera;
 	imguiMenu* imgui;
+	LoadFBX* loadFbx;
 
     bool debug;
     bool renderPrimitives;

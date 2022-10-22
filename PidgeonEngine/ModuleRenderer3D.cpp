@@ -16,7 +16,7 @@
 
 ModuleRenderer3D::ModuleRenderer3D(bool start_enabled) : Module(start_enabled)
 {
-
+	center = (5.0f, 5.0f, 5.0f);
 }
 
 // Destructor
@@ -29,6 +29,8 @@ bool ModuleRenderer3D::Init()
 	LOG("Creating 3D Renderer context");
 	bool ret = true;
 	
+	App->loadFbx->LoadFile("Assets/FBX/BakerHouse.fbx");
+
 	//Create context
 	context = SDL_GL_CreateContext(App->window->window);
 	if(context == NULL)
@@ -143,9 +145,31 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
+update_status ModuleRenderer3D::Update(float dt)
+{
+
+	
+
+	return UPDATE_CONTINUE;
+}
+
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
+	//DrawCube(center);
+
+	glColor3f(0.0f, 0.0f, 1.0f);
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	//glVertexPointer(3, GL_FLOAT, 0, vertices);
+	
+	//unsigned int indices[] = { 0, 1, 2};
+
+	//glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, indices);
+
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glDisableClientState(GL_VERTEX_ARRAY);
+
 	SDL_GL_SwapWindow(App->window->window);
 
 	App->imgui->frame_count++;
@@ -185,4 +209,69 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+}
+
+void ModuleRenderer3D::DrawCube(vec3 center)
+{
+	glLineWidth(2.0f);
+	glColor3f(1, 0, 0);
+	glRotatef(0.1f, 1.0f, 1.0f, 0.0f);
+
+	glBegin(GL_TRIANGLES);
+
+	//front face
+	glVertex3f(center.x + 5, center.y - 5, center.z + 5); //v0
+	glVertex3f(center.x - 5, center.y - 5, center.z + 5); //v1
+	glVertex3f(center.x - 5, center.y + 5, center.z + 5); //v2
+
+	glVertex3f(center.x - 5, center.y + 5, center.z + 5);
+	glVertex3f(center.x + 5, center.y + 5, center.z + 5); //v3
+	glVertex3f(center.x + 5, center.y - 5, center.z + 5);
+
+	//right face		  		  				 			
+	glVertex3f(center.x + 5, center.y - 5, center.z + 5);
+	glVertex3f(center.x + 5, center.y + 5, center.z + 5);
+	glVertex3f(center.x + 5, center.y + 5, center.z - 5); //v4
+
+	glVertex3f(center.x + 5, center.y + 5, center.z - 5);
+	glVertex3f(center.x + 5, center.y - 5, center.z - 5); //v5
+	glVertex3f(center.x + 5, center.y - 5, center.z + 5);
+
+	//top face			  		  				 			
+	glVertex3f(center.x + 5, center.y - 5, center.z + 5);
+	glVertex3f(center.x + 5, center.y - 5, center.z - 5);
+	glVertex3f(center.x - 5, center.y - 5, center.z - 5); //v6
+
+	glVertex3f(center.x - 5, center.y - 5, center.z - 5);
+	glVertex3f(center.x - 5, center.y - 5, center.z + 5);
+	glVertex3f(center.x + 5, center.y - 5, center.z + 5);
+
+	//left face			   				 			   
+	glVertex3f(center.x - 5, center.y + 5, center.z + 5);
+	glVertex3f(center.x - 5, center.y - 5, center.z + 5);
+	glVertex3f(center.x - 5, center.y - 5, center.z - 5);
+
+	glVertex3f(center.x - 5, center.y - 5, center.z - 5);
+	glVertex3f(center.x - 5, center.y - 5, center.z - 5);
+	glVertex3f(center.x - 5, center.y + 5, center.z - 5); //v7
+
+	//bot face			  	  				 		  	
+	glVertex3f(center.x - 5, center.y + 5, center.z - 5);
+	glVertex3f(center.x - 5, center.y + 5, center.z + 5);
+	glVertex3f(center.x + 5, center.y + 5, center.z + 5);
+
+	glVertex3f(center.x + 5, center.y + 5, center.z + 5);
+	glVertex3f(center.x + 5, center.y + 5, center.z - 5);
+	glVertex3f(center.x - 5, center.y + 5, center.z - 5);
+
+	//back face			  	  				 		  	
+	glVertex3f(center.x - 5, center.y + 5, center.z - 5);
+	glVertex3f(center.x + 5, center.y + 5, center.z - 5);
+	glVertex3f(center.x + 5, center.y - 5, center.z - 5);
+
+	glVertex3f(center.x + 5, center.y - 5, center.z - 5);
+	glVertex3f(center.x - 5, center.y - 5, center.z - 5);
+	glVertex3f(center.x - 5, center.y + 5, center.z - 5);
+
+	glEnd();
 }

@@ -345,6 +345,9 @@
     <ClInclude Include="imguiMenu.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="LoadFBX.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -405,6 +408,9 @@
       <Filter>Sources\ExternalLibs\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="imguiMenu.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadFBX.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
