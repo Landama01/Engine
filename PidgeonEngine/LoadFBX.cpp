@@ -85,7 +85,7 @@ void LoadFBX::GenerateBuffer(StoreMesh* OurMesh)
 
 	//index buffer
 	OurMesh->id_index = 0;
-	glGenBuffers(1, (GLuint*)&(OurMesh->id_index));
+	glGenBuffers(1, &(OurMesh->id_index));
 	glBindBuffer(GL_ARRAY_BUFFER, OurMesh->id_index);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * OurMesh->num_index, &OurMesh->index, GL_STATIC_DRAW);
 
