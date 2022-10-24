@@ -29,7 +29,7 @@ bool ModuleRenderer3D::Init()
 	LOG("Creating 3D Renderer context");
 	bool ret = true;
 	
-	App->loadFbx->LoadFile("Assets/FBX/BakerHouse.fbx");
+	App->loadFbx->LoadFile("../Assets/FBX/BakerHouse.fbx");
 
 	//Create context
 	context = SDL_GL_CreateContext(App->window->window);
