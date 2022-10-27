@@ -16,7 +16,6 @@
 
 ModuleRenderer3D::ModuleRenderer3D(bool start_enabled) : Module(start_enabled)
 {
-	center = (5.0f, 5.0f, 5.0f);
 }
 
 // Destructor
@@ -28,8 +27,6 @@ bool ModuleRenderer3D::Init()
 {
 	LOG("Creating 3D Renderer context");
 	bool ret = true;
-	
-	App->loadFbx->LoadFile("../Assets/FBX/BakerHouse.fbx");
 
 	//Create context
 	context = SDL_GL_CreateContext(App->window->window);
@@ -148,19 +145,8 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
-	//DrawCube(center);
-
-	glColor3f(0.0f, 0.0f, 1.0f);
-
-	glEnableClientState(GL_VERTEX_ARRAY);
-	//glVertexPointer(3, GL_FLOAT, 0, vertices);
 	
-	//unsigned int indices[] = { 0, 1, 2};
-
-	//glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, indices);
-
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-	glDisableClientState(GL_VERTEX_ARRAY);
+	DrawSphere();
 
 	SDL_GL_SwapWindow(App->window->window);
 
@@ -203,67 +189,237 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	glLoadIdentity();
 }
 
-void ModuleRenderer3D::DrawCube(vec3 center)
+//Direct mode
+void ModuleRenderer3D::DrawDirectCube()
 {
-	glLineWidth(2.0f);
-	glColor3f(1, 0, 0);
-	glRotatef(0.1f, 1.0f, 1.0f, 0.0f);
+	GLfloat v0[3] = { 1.0f, 1.0f, 0.0f };
+	GLfloat v1[3] = { 0.0f, 1.0f, 0.0f };
+	GLfloat v2[3] = { 0.0f, 0.0f, 0.0f };
+	GLfloat v3[3] = { 1.0f, 0.0f, 0.0f };
+	GLfloat v4[3] = { 1.0f, 0.0f,-1.0f };
+	GLfloat v5[3] = { 1.0f, 1.0f,-1.0f };
+	GLfloat v6[3] = { 0.0f, 1.0f,-1.0f };
+	GLfloat v7[3] = { 0.0f, 0.0f,-1.0f };
 
 	glBegin(GL_TRIANGLES);
 
 	//front face
-	glVertex3f(center.x + 5, center.y - 5, center.z + 5); //v0
-	glVertex3f(center.x - 5, center.y - 5, center.z + 5); //v1
-	glVertex3f(center.x - 5, center.y + 5, center.z + 5); //v2
+	glColor3f(1, 0, 0);
+	glVertex3fv(v0); //v0
+	glVertex3fv(v1); //v1
+	glVertex3fv(v2); //v2
+			  
+	glVertex3fv(v2);
+	glVertex3fv(v3); //v3
+	glVertex3fv(v0);
+			  
+	//right face	
+	glColor3f(0, 1, 0);
+	glVertex3fv(v0);
+	glVertex3fv(v3);
+	glVertex3fv(v4); //v4
+			  
+	glVertex3fv(v4);
+	glVertex3fv(v5); //v5
+	glVertex3fv(v0);
+			  
+	//top face  
+	glColor3f(0, 0, 1);
+	glVertex3fv(v0);
+	glVertex3fv(v5);
+	glVertex3fv(v6); //v6
+			  
+	glVertex3fv(v6);
+	glVertex3fv(v1);
+	glVertex3fv(v0);
+			
+	//back face			
+	glColor3f(0, 1, 1);
+	glVertex3fv(v7);
+	glVertex3fv(v6);
+	glVertex3fv(v5);
 
-	glVertex3f(center.x - 5, center.y + 5, center.z + 5);
-	glVertex3f(center.x + 5, center.y + 5, center.z + 5); //v3
-	glVertex3f(center.x + 5, center.y - 5, center.z + 5);
+	glVertex3fv(v5);
+	glVertex3fv(v4);
+	glVertex3fv(v7);
 
-	//right face		  		  				 			
-	glVertex3f(center.x + 5, center.y - 5, center.z + 5);
-	glVertex3f(center.x + 5, center.y + 5, center.z + 5);
-	glVertex3f(center.x + 5, center.y + 5, center.z - 5); //v4
-
-	glVertex3f(center.x + 5, center.y + 5, center.z - 5);
-	glVertex3f(center.x + 5, center.y - 5, center.z - 5); //v5
-	glVertex3f(center.x + 5, center.y - 5, center.z + 5);
-
-	//top face			  		  				 			
-	glVertex3f(center.x + 5, center.y - 5, center.z + 5);
-	glVertex3f(center.x + 5, center.y - 5, center.z - 5);
-	glVertex3f(center.x - 5, center.y - 5, center.z - 5); //v6
-
-	glVertex3f(center.x - 5, center.y - 5, center.z - 5);
-	glVertex3f(center.x - 5, center.y - 5, center.z + 5);
-	glVertex3f(center.x + 5, center.y - 5, center.z + 5);
-
-	//left face			   				 			   
-	glVertex3f(center.x - 5, center.y + 5, center.z + 5);
-	glVertex3f(center.x - 5, center.y - 5, center.z + 5);
-	glVertex3f(center.x - 5, center.y - 5, center.z - 5);
-
-	glVertex3f(center.x - 5, center.y - 5, center.z - 5);
-	glVertex3f(center.x - 5, center.y - 5, center.z - 5);
-	glVertex3f(center.x - 5, center.y + 5, center.z - 5); //v7
-
-	//bot face			  	  				 		  	
-	glVertex3f(center.x - 5, center.y + 5, center.z - 5);
-	glVertex3f(center.x - 5, center.y + 5, center.z + 5);
-	glVertex3f(center.x + 5, center.y + 5, center.z + 5);
-
-	glVertex3f(center.x + 5, center.y + 5, center.z + 5);
-	glVertex3f(center.x + 5, center.y + 5, center.z - 5);
-	glVertex3f(center.x - 5, center.y + 5, center.z - 5);
-
-	//back face			  	  				 		  	
-	glVertex3f(center.x - 5, center.y + 5, center.z - 5);
-	glVertex3f(center.x + 5, center.y + 5, center.z - 5);
-	glVertex3f(center.x + 5, center.y - 5, center.z - 5);
-
-	glVertex3f(center.x + 5, center.y - 5, center.z - 5);
-	glVertex3f(center.x - 5, center.y - 5, center.z - 5);
-	glVertex3f(center.x - 5, center.y + 5, center.z - 5);
-
+	//left face		
+	glColor3f(1, 0, 1);
+	glVertex3fv(v7);
+	glVertex3fv(v2);
+	glVertex3fv(v1);
+			  
+	glVertex3fv(v1);
+	glVertex3fv(v6);
+	glVertex3fv(v7); //v7
+			  
+	//bot face	 
+	glColor3f(1, 1, 0);
+	glVertex3fv(v7);
+	glVertex3fv(v4);
+	glVertex3fv(v3);
+			  
+	glVertex3fv(v3);
+	glVertex3fv(v2);
+	glVertex3fv(v7);
+			  
 	glEnd();
+}
+
+//Vertex Arrays and glDrawArrays()
+void ModuleRenderer3D::DrawVACube()
+{
+	GLfloat vertices[] =
+	{
+		1,  1,  0,
+		0,  1,  0,
+		0,  0,  0,
+			    
+		0,  0,  0,
+		1,  0,  0,
+		1,  1,  0,
+			    
+		1,  1,  0,
+		1,  0,  0,
+		1,  0, -1,
+
+		1,  0, -1,
+		1,  1, -1,
+		1,  1,  0,
+
+		1,  1,  0,
+		1,  1, -1,
+		0,  0, -1,
+
+		0,  1, -1,
+		0,  1,  0,
+		1,  1,  0,
+
+		0,  0, -1,
+		0,  1, -1,
+		1,  1, -1,
+
+		1,  1, -1,
+		1,  0, -1,
+		0,  0, -1,
+
+		0,  0, -1,
+		0,  0,  0,
+		0,  1,  0,
+
+		0,  1,  0,
+		0,  1, -1,
+		0,  0, -1,
+
+		0,  0, -1,
+		1,  0, -1,
+		1,  0,  0,
+
+		1,  0,  0,
+		0,  0,  0,
+		0,  0, -1,
+			
+	};
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(3, GL_FLOAT, 0, vertices);
+
+	// draw a cube
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+
+	// deactivate vertex arrays after drawing
+	glDisableClientState(GL_VERTEX_ARRAY);
+}
+
+//Indices and glDrawElements()
+void ModuleRenderer3D::DrawIndexCube()
+{
+	GLfloat vertices[] =
+	{
+		1.0f, 1.0f, 0.0f,
+		0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		1.0f, 0.0f,-1.0f,
+		1.0f, 1.0f,-1.0f,
+		0.0f, 1.0f,-1.0f,
+		0.0f, 0.0f,-1.0f,
+	};
+
+	GLubyte indices[] = 
+	{ 
+		0,1,2, 2,3,0,   
+		0,3,4, 4,5,0,
+		0,5,6, 6,1,0,
+		1,6,7, 7,2,1,
+		7,4,3, 3,2,7,
+		4,7,6, 6,5,4
+	};
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(3, GL_FLOAT, 0, vertices);
+
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	// draw a cube
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_BYTE, indices);
+
+	// deactivate vertex arrays after drawing
+	glDisableClientState(GL_VERTEX_ARRAY);
+}
+
+void ModuleRenderer3D::DrawSphere()
+{
+	float const R = 1. / (float)(rings - 1);
+	float const S = 1. / (float)(sectors - 1);
+	int r, s;
+
+	std::vector<GLfloat> vertices;
+	std::vector<GLfloat> normals;
+	std::vector<GLfloat> texcoords;
+	std::vector<GLushort> indices;
+
+	vertices.resize(rings * sectors * 3);
+	normals.resize(rings * sectors * 3);
+	texcoords.resize(rings * sectors * 2);
+	std::vector<GLfloat>::iterator v = vertices.begin();
+	std::vector<GLfloat>::iterator n = normals.begin();
+	std::vector<GLfloat>::iterator t = texcoords.begin();
+	for (r = 0; r < rings; r++) for (s = 0; s < sectors; s++) {
+		float const y = sin(-M_PI_2 + M_PI * r * R);
+		float const x = cos(2 * M_PI * s * S) * sin(M_PI * r * R);
+		float const z = sin(2 * M_PI * s * S) * sin(M_PI * r * R);
+
+		*t++ = s * S;
+		*t++ = r * R;
+
+		*v++ = x * radius;
+		*v++ = y * radius;
+		*v++ = z * radius;
+
+		*n++ = x;
+		*n++ = y;
+		*n++ = z;
+	}
+
+	indices.resize(rings * sectors * 4);
+	std::vector<GLushort>::iterator i = indices.begin();
+	for (r = 0; r < rings; r++) for (s = 0; s < sectors; s++) {
+		*i++ = r * sectors + s;
+		*i++ = r * sectors + (s + 1);
+		*i++ = (r + 1) * sectors + (s + 1);
+		*i++ = (r + 1) * sectors + s;
+	}
+
+	GLfloat x = 0, y = 0, z = 0;
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_NORMAL_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	glVertexPointer(3, GL_FLOAT, 0, &vertices[0]);
+	glNormalPointer(GL_FLOAT, 0, &normals[0]);
+	glTexCoordPointer(2, GL_FLOAT, 0, &texcoords[0]);
+	glDrawElements(GL_QUADS, indices.size(), GL_UNSIGNED_SHORT, &indices[0]);
+	glPopMatrix();
 }

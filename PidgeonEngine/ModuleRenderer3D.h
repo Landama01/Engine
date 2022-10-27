@@ -1,7 +1,6 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
-#include "glmath.h"
 #include "Light.h"
 
 #define MAX_LIGHTS 8
@@ -19,7 +18,11 @@ public:
 
 	void OnResize(int width, int height);
 
-	void DrawCube(vec3 center);
+	void DrawDirectCube();
+	void DrawVACube();
+	void DrawIndexCube();
+
+	void DrawSphere();
 
 public:
 
@@ -31,8 +34,14 @@ public:
 	int fps;
 	int fps_cont = 0;
 
+	uint geometriesCount;
+	
 private:
-	vec3 center;
 
 	double rotate_x;
+
+	//sphere
+	float radius = 1;
+	uint rings = 12;
+	uint sectors = 24;
 };

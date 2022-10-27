@@ -2,19 +2,14 @@
 #include "Application.h"
 #include "ModuleRenderer3D.h"
 
-#include "Glew/include/glew.h"
-#include "SDL/include/SDL_opengl.h"
-#include <gl/GL.h>
-#include <gl/GLU.h>
-
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
 
-#include "time.h"
-#include <string>
-
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
+
+#define CHECKERS_HEIGHT 256
+#define CHECKERS_WIDTH 256
 
 StoreMesh::~StoreMesh()
 {
@@ -30,11 +25,11 @@ StoreMesh::~StoreMesh()
 	vertex = nullptr;
 }
 
-LoadFBX::LoadFBX(bool start_enabled) : Module(start_enabled), VAO(0)
+LoadMesh::LoadMesh(bool start_enabled) : Module(start_enabled)
 {
 }
 
-void LoadFBX::LoadFile(const char* file_path) 
+void LoadMesh::LoadFile(const char* file_path)
 {
 	const aiScene* scene = aiImportFile(file_path, aiProcessPreset_TargetRealtime_MaxQuality);
 
@@ -74,9 +69,11 @@ void LoadFBX::LoadFile(const char* file_path)
 		LOG("Error loading scene % s", file_path);
 }
 
-void LoadFBX::GenerateBuffer(StoreMesh* OurMesh)
+void LoadMesh::GenerateBuffer(StoreMesh* OurMesh)
 {
 	glGenVertexArrays(1, &VAO);
+
+	glBindVertexArray(VAO);
 
 	//vertex buffer
 	glGenBuffers(1, &OurMesh->id_vertex);
@@ -89,8 +86,13 @@ void LoadFBX::GenerateBuffer(StoreMesh* OurMesh)
 	glBindBuffer(GL_ARRAY_BUFFER, OurMesh->id_index);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * OurMesh->num_index, &OurMesh->index, GL_STATIC_DRAW);
 
+	//position
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, Vertex_Count * sizeof(float), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
+
+	//texture coords
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, Vertex_Count * sizeof(float), (GLvoid*)(3 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(1);
 
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -98,9 +100,9 @@ void LoadFBX::GenerateBuffer(StoreMesh* OurMesh)
 }
 
 // Called before render is available
-bool LoadFBX::Init()
+bool LoadMesh::Init()
 {
-	LOG("Loading FBX files");
+	LOG("Loading meshes and textures");
 	bool ret = true;
 	
 	//Stream log messages to Debug window
@@ -108,17 +110,40 @@ bool LoadFBX::Init()
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
 	aiAttachLogStream(&stream);
 
+	GLubyte checkerImage[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
+
+	for (int i = 0; i < CHECKERS_HEIGHT; i++) {
+		for (int j = 0; j < CHECKERS_WIDTH; j++) {
+			int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
+			checkerImage[i][j][0] = (GLubyte)c;
+			checkerImage[i][j][1] = (GLubyte)c;
+			checkerImage[i][j][2] = (GLubyte)c;
+			checkerImage[i][j][3] = (GLubyte)255;
+		}
+	}
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, checkerImage);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
 	return ret;
 }
 
-update_status LoadFBX::PostUpdate(float dt)
+update_status LoadMesh::PostUpdate(float dt)
 {	
 
 	return UPDATE_CONTINUE;
 }
 
 // Called before quitting
-bool LoadFBX::CleanUp()
+bool LoadMesh::CleanUp()
 {
 	// detach log stream
 	aiDetachAllLogStreams();

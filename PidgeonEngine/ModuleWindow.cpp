@@ -2,7 +2,6 @@
 #include "Application.h"
 #include "ModuleWindow.h"
 
-//ModuleWindow::ModuleWindow(Application* app, bool start_enabled) : Module(app, start_enabled)
 ModuleWindow::ModuleWindow(bool start_enabled) : Module(start_enabled)
 {
 	window = NULL;
@@ -30,6 +29,7 @@ bool ModuleWindow::Init()
 		//Create window
 		width = SCREEN_WIDTH * SCREEN_SIZE;
 		height = SCREEN_HEIGHT * SCREEN_SIZE;
+		brightness = 1.0f;
 		Uint32 flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
 
 		//Use OpenGL 2.1

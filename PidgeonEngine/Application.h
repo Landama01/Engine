@@ -5,10 +5,11 @@
 #include "Module.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
+#include "ModuleScene.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "imguiMenu.h"
-#include "LoadFBX.h"
+#include "LoadMesh.h"
 
 #include <vector>
 
@@ -17,10 +18,11 @@ class Application
 public:
 	ModuleWindow* window;
 	ModuleInput* input;
+	ModuleScene* scene;
 	ModuleRenderer3D* renderer3D;
 	ModuleCamera3D* camera;
 	imguiMenu* imgui;
-	LoadFBX* loadFbx;
+	LoadMesh* loadMesh;
 
     bool debug;
     bool renderPrimitives;

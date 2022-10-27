@@ -23,6 +23,8 @@ bool ModuleCamera3D::Start()
 	LOG("Setting up the camera");
 	bool ret = true;
 
+	LookAt(vec3(0, 0, 0));
+
 	return ret;
 }
 
@@ -41,8 +43,21 @@ update_status ModuleCamera3D::Update(float dt)
 	// Now we can make this movememnt frame rate independant!
 
 	vec3 newPos(0, 0, 0);
-
+	float speed = 10.0f * dt;
 	// Mouse motion ----------------
+
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+		newPos -= X * speed;
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
+		newPos += X * speed;
+
+	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
+		newPos -= Z * speed;
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
+		newPos += Z * speed;
+
+	Position += newPos;
+	Reference += newPos;
 
 	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 	{
@@ -56,19 +71,19 @@ update_status ModuleCamera3D::Update(float dt)
 		if (dx != 0)
 		{
 			float DeltaX = (float)dx * Sensitivity;
-	
+
 			X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
 			Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
 			Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
 		}
-	
+		
 		if (dy != 0)
 		{
 			float DeltaY = (float)dy * Sensitivity;
-	
+
 			Y = rotate(Y, DeltaY, X);
 			Z = rotate(Z, DeltaY, X);
-	
+
 			if (Y.y < 0.0f)
 			{
 				Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
@@ -135,6 +150,9 @@ float* ModuleCamera3D::GetViewMatrix()
 // -----------------------------------------------------------------
 void ModuleCamera3D::CalculateViewMatrix()
 {
+	//cameraFrustum.pos = Position;
+	//cameraFrustum.front = Z;
+	//cameraFrustum.up = Y.Normalized();
 	ViewMatrix = mat4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, -dot(X, Position), -dot(Y, Position), -dot(Z, Position), 1.0f);
 	ViewMatrixInverse = inverse(ViewMatrix);
 }

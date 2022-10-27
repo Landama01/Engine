@@ -4,10 +4,11 @@ Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 {
     window = new ModuleWindow();
 	input = new ModuleInput();
+	scene = new ModuleScene();
 	renderer3D = new ModuleRenderer3D();
 	camera = new ModuleCamera3D();
 	imgui = new imguiMenu();
-	loadFbx = new LoadFBX();
+	loadMesh = new LoadMesh();
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -17,8 +18,9 @@ Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);
+	AddModule(scene);
 	AddModule(imgui);
-	AddModule(loadFbx);
+	AddModule(loadMesh);
 	
 	// Scenes
 

@@ -2,8 +2,10 @@
 
 #include "Module.h"
 #include "Globals.h"
-#include "glmath.h"
 #include "Light.h"
+
+#include "Glew/include/glew.h"
+#include "SDL/include/SDL_opengl.h"
 
 #include <vector>
 
@@ -23,10 +25,10 @@ struct StoreMesh
 
 };
 
-class LoadFBX : public Module
+class LoadMesh : public Module
 {
 public:
-	LoadFBX(bool start_enabled = true);
+	LoadMesh(bool start_enabled = true);
 
 	void LoadFile(const char* file_path);
 	void GenerateBuffer(StoreMesh* OurMesh);
@@ -40,6 +42,7 @@ public:
 	uint VAO = 0;
 	uint VBO = 0;
 
+	GLuint textureID;
 	//std::vector<StoreMesh*> meshes;
 
 private:

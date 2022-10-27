@@ -345,7 +345,10 @@
     <ClInclude Include="imguiMenu.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="LoadFBX.h">
+    <ClInclude Include="LoadMesh.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleScene.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
   </ItemGroup>
@@ -410,7 +413,10 @@
     <ClCompile Include="imguiMenu.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="LoadFBX.cpp">
+    <ClCompile Include="LoadMesh.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleScene.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
