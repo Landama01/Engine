@@ -19,9 +19,14 @@ bool ModuleScene::Init()
 	App->camera->Move(vec3(1, 0 , 0));
 	App->camera->LookAt(vec3(0, 0 , 0));
 
-	//App->loadMesh->LoadFile("../Assets/FBX/BakerHouse.fbx");
-	
 	return ret;
+}
+
+bool ModuleScene::Start()
+{
+	App->loadMesh->LoadFile("../Assets/FBX/BakerHouse.fbx");
+
+	return true;
 }
 
 // PreUpdate: clear buffer

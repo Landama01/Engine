@@ -59,23 +59,36 @@ update_status imguiMenu::Update(float dt)
 
 	if (ImGui::BeginMainMenuBar())
 	{
+		if (ImGui::BeginMenu("GameObject"))
+		{
+			if (ImGui::MenuItem("Cube"))
+			{
+				App->renderer3D->cubeExist = !App->renderer3D->cubeExist;
+			}
+			if (ImGui::MenuItem("Sphere"))
+			{
+				App->renderer3D->sphereExist = !App->renderer3D->sphereExist;
+			}
+
+			ImGui::EndMenu();
+		}
 		if (ImGui::BeginMenu("Help"))
 		{
 			if (ImGui::MenuItem("Engine GitHub"))
 			{
 				ShellExecuteA(NULL, "open", "https://github.com/Landama01/Engine", NULL, NULL, SW_SHOWDEFAULT);
-			}
+			}			
 			if (ImGui::MenuItem("About"))
 			{
 				ShowAbout = !ShowAbout;
 			}
 				
 			ImGui::EndMenu();
-		}
+		}		
 	}	
 	ImGui::EndMainMenuBar();
 
-	if (ImGui::Begin("Test"))
+	if (ImGui::Begin("Configuration"))
 	{	
 		if (ImGui::CollapsingHeader("Application"))
 		{
@@ -108,6 +121,10 @@ update_status imguiMenu::Update(float dt)
 
 			ImGui::Checkbox("Fullscreen", &fullscreen);
 
+		}
+		if (ImGui::CollapsingHeader("Geometry"))
+		{
+			ImGui::Checkbox("Wireframe", &wireframe);
 		}
 		
 	}

@@ -35,7 +35,10 @@ public:
 	int fps_cont = 0;
 
 	uint geometriesCount;
+	bool cubeExist = false;
+	bool sphereExist = false;
 	
+	bool initResize;
 private:
 
 	double rotate_x;

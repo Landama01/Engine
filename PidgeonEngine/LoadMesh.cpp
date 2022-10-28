@@ -71,6 +71,7 @@ void LoadMesh::LoadFile(const char* file_path)
 
 void LoadMesh::GenerateBuffer(StoreMesh* OurMesh)
 {
+	GLuint VAO;
 	glGenVertexArrays(1, &VAO);
 
 	glBindVertexArray(VAO);

@@ -28,6 +28,8 @@ bool ModuleRenderer3D::Init()
 	LOG("Creating 3D Renderer context");
 	bool ret = true;
 
+	initResize = true;
+
 	//Create context
 	context = SDL_GL_CreateContext(App->window->window);
 	if(context == NULL)
@@ -41,7 +43,6 @@ bool ModuleRenderer3D::Init()
 
 	//print GLEW info
 	LOG("Using Glew %s", glewGetString(GLEW_VERSION));
-
 	LOG("Vendor: %s", glGetString(GL_VENDOR));
 	LOG("Renderer: %s", glGetString(GL_RENDERER));
 	LOG("OpenGL version supported %s", glGetString(GL_VERSION));
@@ -145,8 +146,11 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
-	
-	DrawSphere();
+	if(cubeExist)
+		DrawIndexCube();
+
+	if (sphereExist)
+		DrawSphere();
 
 	SDL_GL_SwapWindow(App->window->window);
 
@@ -182,6 +186,7 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
+
 	ProjectionMatrix = perspective(60.0f, (float)width / (float)height, 0.125f, 512.0f);
 	glLoadMatrixf(&ProjectionMatrix);
 
@@ -324,6 +329,8 @@ void ModuleRenderer3D::DrawVACube()
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexPointer(3, GL_FLOAT, 0, vertices);
 
+	if (App->imgui->wireframe)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	// draw a cube
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
@@ -359,7 +366,8 @@ void ModuleRenderer3D::DrawIndexCube()
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexPointer(3, GL_FLOAT, 0, vertices);
 
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	if(App->imgui->wireframe)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	// draw a cube
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_BYTE, indices);
@@ -419,6 +427,8 @@ void ModuleRenderer3D::DrawSphere()
 
 	glVertexPointer(3, GL_FLOAT, 0, &vertices[0]);
 	glNormalPointer(GL_FLOAT, 0, &normals[0]);
+	if (App->imgui->wireframe)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glTexCoordPointer(2, GL_FLOAT, 0, &texcoords[0]);
 	glDrawElements(GL_QUADS, indices.size(), GL_UNSIGNED_SHORT, &indices[0]);
 	glPopMatrix();

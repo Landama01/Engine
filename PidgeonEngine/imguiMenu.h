@@ -48,6 +48,7 @@ public:
 	int sliderWidth = SCREEN_WIDTH;
 	int sliderHeight = SCREEN_HEIGHT;
 	bool fullscreen = WIN_FULLSCREEN;
+	bool wireframe = false;
 
 	ImVector<float> fps_log;
 };

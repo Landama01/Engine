@@ -13,7 +13,6 @@
 
 struct StoreMesh
 {
-	StoreMesh() {};
 	~StoreMesh();
 
 	uint id_index = 0; // index in VRAM
@@ -39,10 +38,8 @@ public:
 
 public:
 
-	uint VAO = 0;
-	uint VBO = 0;
-
-	GLuint textureID;
+	uint textureID;
+	
 	//std::vector<StoreMesh*> meshes;
 
 private:
