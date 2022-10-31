@@ -29,7 +29,6 @@ bool ModuleWindow::Init()
 		//Create window
 		width = SCREEN_WIDTH * SCREEN_SIZE;
 		height = SCREEN_HEIGHT * SCREEN_SIZE;
-		brightness = 1.0f;
 		Uint32 flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
 
 		//Use OpenGL 2.1
@@ -61,6 +60,8 @@ bool ModuleWindow::Init()
 		}
 
 		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
+
+		SDL_MaximizeWindow(window);
 
 		if(window == NULL)
 		{

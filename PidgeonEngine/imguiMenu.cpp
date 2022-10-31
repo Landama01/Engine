@@ -48,10 +48,6 @@ bool imguiMenu::Start()
 // -----------------------------------------------------------------
 update_status imguiMenu::Update(float dt)
 {
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplSDL2_NewFrame();
-	ImGui::NewFrame();	
-
 	sprintf_s(MouseX, 25, "Mouse X: %d", App->input->GetMouseX());
 	sprintf_s(MouseY, 25, "Mouse Y: %d", App->input->GetMouseY());
 	sprintf_s(title, 25, "Framerate: %.1f", fps_log[fps_log.size() - 1]);	
@@ -145,9 +141,6 @@ update_status imguiMenu::Update(float dt)
 		SDL_SetWindowFullscreen(App->window->window, flagsFullFalse); 
 	}
 
-	ImGui::Render();
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
 	return UPDATE_CONTINUE;
 }
 
@@ -211,11 +204,7 @@ void imguiMenu::AboutInfo()
 // -----------------------------------------------------------------
 bool imguiMenu::CleanUp()
 {
-	LOG("Cleaning menu");
-
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplSDL2_Shutdown();
-	ImGui::DestroyContext();
+	LOG("Cleaning menu on renderer");
 
 	return true;
 }

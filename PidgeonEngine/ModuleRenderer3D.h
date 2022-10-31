@@ -18,6 +18,8 @@ public:
 
 	void OnResize(int width, int height);
 
+	void DrawAll();
+
 	void DrawDirectCube();
 	void DrawVACube();
 	void DrawIndexCube();

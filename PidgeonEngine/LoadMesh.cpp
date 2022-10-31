@@ -25,6 +25,28 @@ StoreMesh::~StoreMesh()
 	vertex = nullptr;
 }
 
+void StoreMesh::Draw()
+{
+	glEnableClientState(GL_VERTEX_ARRAY);
+
+	glBindBuffer(GL_ARRAY_BUFFER, id_vertex);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_index);	
+	
+	glDrawElements(GL_TRIANGLES, num_index, GL_UNSIGNED_INT, NULL);
+
+	if (App->imgui->wireframe)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+
+}
+
 LoadMesh::LoadMesh(bool start_enabled) : Module(start_enabled)
 {
 }
@@ -41,8 +63,8 @@ void LoadMesh::LoadFile(const char* file_path)
 			StoreMesh* OurMesh = new StoreMesh();
 			// copy vertices
 			OurMesh->num_vertex = scene->mMeshes[i]->mNumVertices;
-			OurMesh->vertex = new float[OurMesh->num_vertex * 3];
-			memcpy(OurMesh->vertex, scene->mMeshes[i]->mVertices, sizeof(float) * OurMesh->num_vertex * 3);
+			OurMesh->vertex = new float[OurMesh->num_vertex * Vertex_Count];
+			memcpy(OurMesh->vertex, scene->mMeshes[i]->mVertices, sizeof(float) * OurMesh->num_vertex * Vertex_Count);
 			LOG("New mesh with %d vertices", OurMesh->num_vertex);
 
 			// copy faces
@@ -57,46 +79,36 @@ void LoadMesh::LoadFile(const char* file_path)
 						LOG("WARNING, geometry face with != 3 indices!");
 					}
 					else
+					{
 						memcpy(&OurMesh->index[x * 3], scene->mMeshes[i]->mFaces[x].mIndices, 3 * sizeof(uint));
+					}
 				}
 				GenerateBuffer(OurMesh);
+				meshCount.push_back(OurMesh);
 			}
 
 		}
 		aiReleaseImport(scene);
 	}
 	else
-		LOG("Error loading scene % s", file_path);
+	{
+	LOG("Error loading scene % s", file_path);
+	}
+		
 }
 
 void LoadMesh::GenerateBuffer(StoreMesh* OurMesh)
 {
-	GLuint VAO;
-	glGenVertexArrays(1, &VAO);
-
-	glBindVertexArray(VAO);
-
-	//vertex buffer
-	glGenBuffers(1, &OurMesh->id_vertex);
+	//vertex buffer	
+	glGenBuffers(1, (GLuint*)&(OurMesh->id_vertex));
 	glBindBuffer(GL_ARRAY_BUFFER, OurMesh->id_vertex);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * Vertex_Count * OurMesh->num_vertex, &OurMesh->vertex, GL_STATIC_DRAW);
-
-	//index buffer
-	OurMesh->id_index = 0;
-	glGenBuffers(1, &(OurMesh->id_index));
-	glBindBuffer(GL_ARRAY_BUFFER, OurMesh->id_index);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * OurMesh->num_index, &OurMesh->index, GL_STATIC_DRAW);
-
-	//position
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, Vertex_Count * sizeof(float), (GLvoid*)0);
-	glEnableVertexAttribArray(0);
-
-	//texture coords
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, Vertex_Count * sizeof(float), (GLvoid*)(3 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(1);
-
-	glBindVertexArray(0);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * Vertex_Count * OurMesh->num_vertex, &OurMesh->vertex[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	//index buffer	
+	glGenBuffers(1, (GLuint*)&(OurMesh->id_index));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, OurMesh->id_index);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * OurMesh->num_index, &OurMesh->index[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
@@ -132,13 +144,14 @@ bool LoadMesh::Init()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, checkerImage);
 
-	glBindTexture(GL_TEXTURE_2D, 0);
-
 	return ret;
 }
 
 update_status LoadMesh::PostUpdate(float dt)
 {	
+	/*for (int i = 0; i < meshCount.size(); i++) {
+		meshCount[i]->Draw();
+	}*/
 
 	return UPDATE_CONTINUE;
 }

@@ -24,7 +24,7 @@ bool ModuleScene::Init()
 
 bool ModuleScene::Start()
 {
-	App->loadMesh->LoadFile("../Assets/FBX/BakerHouse.fbx");
+	App->loadMesh->LoadFile("Assets/BakerHouse.fbx");
 
 	return true;
 }
@@ -47,7 +47,8 @@ update_status ModuleScene::Update(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleScene::PostUpdate(float dt)
 {
-		
+	App->renderer3D->DrawAll();
+
 	return UPDATE_CONTINUE;
 }
 

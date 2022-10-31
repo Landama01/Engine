@@ -22,6 +22,7 @@ struct StoreMesh
 	uint num_vertex = 0;
 	float* vertex = nullptr;
 
+	void Draw();
 };
 
 class LoadMesh : public Module
@@ -31,6 +32,7 @@ public:
 
 	void LoadFile(const char* file_path);
 	void GenerateBuffer(StoreMesh* OurMesh);
+	
 
 	bool Init();
 	update_status PostUpdate(float dt);	
@@ -38,10 +40,9 @@ public:
 
 public:
 
-	uint textureID;
-	
-	//std::vector<StoreMesh*> meshes;
+	std::vector<StoreMesh*> meshCount;
 
 private:
-	
+
+	uint textureID = 0;
 };

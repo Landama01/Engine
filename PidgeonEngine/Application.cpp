@@ -17,12 +17,13 @@ Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 	// Main Modules
 	AddModule(window);
 	AddModule(camera);
-	AddModule(input);
-	AddModule(scene);
+	AddModule(input);	
+
 	AddModule(imgui);
 	AddModule(loadMesh);
 	
 	// Scenes
+	AddModule(scene);
 
 	// Renderer last!
 	AddModule(renderer3D);
