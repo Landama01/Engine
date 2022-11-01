@@ -6,6 +6,7 @@ Project repository: https://github.com/Landama01/PidgeonEngine
 Andreu Landa: https://github.com/Landama01
 ## Controls
 Models can be uploaded to the scene through the GameObject button in the bar menu.
+
 Camera controls:
  - Use "WASD" buttons for moving through the scene and clicking right mouse button and drag for moving camera orientation like an FPS.
  - Hold left SHIFT for increasing camera speed.
