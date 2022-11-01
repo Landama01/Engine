@@ -12,6 +12,7 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
+	void OrbitalCamera();
 	void Look(const vec3& Position, const vec3& Reference, bool RotateAroundReference = false);
 	void LookAt(const vec3& Spot);
 	void Move(const vec3& Movement);

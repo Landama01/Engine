@@ -39,6 +39,8 @@ public:
 	uint geometriesCount;
 	bool cubeExist = false;
 	bool sphereExist = false;
+	bool carExist = false;
+	bool golemExist = false;
 	
 	bool initResize;
 private:

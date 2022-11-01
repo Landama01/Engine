@@ -16,7 +16,7 @@ bool ModuleScene::Init()
 	LOG("Creating 3D Renderer context");
 	bool ret = true;
 	
-	App->camera->Move(vec3(1, 0 , 0));
+	App->camera->Move(vec3(0, 0 , 0));
 	App->camera->LookAt(vec3(0, 0 , 0));
 
 	return ret;
@@ -32,6 +32,17 @@ bool ModuleScene::Start()
 // PreUpdate: clear buffer
 update_status ModuleScene::PreUpdate(float dt)
 {
+	if (App->renderer3D->carExist)
+	{
+		App->loadMesh->LoadFile("Assets/Car.fbx");
+		App->renderer3D->carExist = false;
+	}
+	if (App->renderer3D->golemExist)
+	{
+		App->loadMesh->LoadFile("Assets/Golem.fbx");
+		App->renderer3D->golemExist = false;
+	}
+
 	return UPDATE_CONTINUE;
 }
 
@@ -39,6 +50,7 @@ update_status ModuleScene::Update(float dt)
 {
 
 	Plane plane(0, 1, 0, 0);
+	plane.axis = true;
 	plane.Render();
 
 	return UPDATE_CONTINUE;

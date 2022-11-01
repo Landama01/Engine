@@ -201,7 +201,7 @@ void ModuleRenderer3D::OnResize(int width, int height)
 }
 
 void ModuleRenderer3D::DrawAll()
-{
+{	
 	for (int i = 0; i < App->loadMesh->meshCount.size(); i++)
 	{
 		App->loadMesh->meshCount[i]->Draw();
@@ -209,7 +209,7 @@ void ModuleRenderer3D::DrawAll()
 	if (cubeExist) 
 		DrawIndexCube();
 	if (sphereExist) 
-		DrawSphere();
+		DrawSphere();	
 }
 
 //Direct mode

@@ -8,9 +8,6 @@
 
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
 
-#define CHECKERS_HEIGHT 256
-#define CHECKERS_WIDTH 256
-
 StoreMesh::~StoreMesh()
 {
 	glDeleteBuffers(1, &id_vertex);
@@ -32,6 +29,10 @@ void StoreMesh::Draw()
 	glBindBuffer(GL_ARRAY_BUFFER, id_vertex);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, id_texcoords);
+	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_index);	
 	
 	glDrawElements(GL_TRIANGLES, num_index, GL_UNSIGNED_INT, NULL);
@@ -44,7 +45,7 @@ void StoreMesh::Draw()
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
-
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
 LoadMesh::LoadMesh(bool start_enabled) : Module(start_enabled)
@@ -100,16 +101,22 @@ void LoadMesh::LoadFile(const char* file_path)
 void LoadMesh::GenerateBuffer(StoreMesh* OurMesh)
 {
 	//vertex buffer	
-	glGenBuffers(1, (GLuint*)&(OurMesh->id_vertex));
+	glGenBuffers(1, &OurMesh->id_vertex);
 	glBindBuffer(GL_ARRAY_BUFFER, OurMesh->id_vertex);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * Vertex_Count * OurMesh->num_vertex, &OurMesh->vertex[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	//index buffer	
-	glGenBuffers(1, (GLuint*)&(OurMesh->id_index));
+	glGenBuffers(1, &OurMesh->id_index);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, OurMesh->id_index);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * OurMesh->num_index, &OurMesh->index[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	//texture coords
+	glGenBuffers(1, &OurMesh->id_texcoords);
+	glBindBuffer(GL_ARRAY_BUFFER, OurMesh->id_texcoords);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * OurMesh->num_texcoords * 2, OurMesh->texcoords, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 // Called before render is available
@@ -122,36 +129,12 @@ bool LoadMesh::Init()
 	struct aiLogStream stream;
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
 	aiAttachLogStream(&stream);
-
-	GLubyte checkerImage[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
-
-	for (int i = 0; i < CHECKERS_HEIGHT; i++) {
-		for (int j = 0; j < CHECKERS_WIDTH; j++) {
-			int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
-			checkerImage[i][j][0] = (GLubyte)c;
-			checkerImage[i][j][1] = (GLubyte)c;
-			checkerImage[i][j][2] = (GLubyte)c;
-			checkerImage[i][j][3] = (GLubyte)255;
-		}
-	}
-
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glGenTextures(1, &textureID);
-	glBindTexture(GL_TEXTURE_2D, textureID);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, checkerImage);
-
+	
 	return ret;
 }
 
-update_status LoadMesh::PostUpdate(float dt)
+update_status LoadMesh::Update(float dt)
 {	
-	/*for (int i = 0; i < meshCount.size(); i++) {
-		meshCount[i]->Draw();
-	}*/
 
 	return UPDATE_CONTINUE;
 }

@@ -10,7 +10,7 @@ ModuleCamera3D::ModuleCamera3D(bool start_enabled) : Module(start_enabled)
 	Y = vec3(0.0f, 1.0f, 0.0f);
 	Z = vec3(0.0f, 0.0f, 1.0f);
 
-	Position = vec3(0.0f, 0.0f, 5.0f);
+	Position = vec3(0.0f, 4.0f, 9.0f);
 	Reference = vec3(0.0f, 0.0f, 0.0f);
 }
 
@@ -23,7 +23,7 @@ bool ModuleCamera3D::Start()
 	LOG("Setting up the camera");
 	bool ret = true;
 
-	LookAt(vec3(0, 0, 0));
+	LookAt(Reference);
 
 	return ret;
 }
@@ -46,6 +46,9 @@ update_status ModuleCamera3D::Update(float dt)
 	float speed = 10.0f * dt;
 	// Mouse motion ----------------
 
+	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
+		speed *= 2.f;
+
 	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 		newPos -= X * speed;
 	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
@@ -56,48 +59,77 @@ update_status ModuleCamera3D::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
 		newPos += Z * speed;
 
-	Position += newPos;
-	Reference += newPos;
+	if (App->input->GetMouseZ() > 0)
+		newPos -= Z * speed * 2;
+	if (App->input->GetMouseZ() < 0)
+		newPos += Z * speed * 2;
 
+	Position += newPos;
+
+	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
+	{
+		vec3 pivot(0.0f, 0.0f, 0.0f);
+		Reference = pivot;
+
+		OrbitalCamera();
+	}
+	else
+	{
+		Reference += newPos;
+	}
+	
 	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 	{
-		int dx = -App->input->GetMouseXMotion();
-		int dy = -App->input->GetMouseYMotion();
-	
-		float Sensitivity = 0.25f;
-	
-		Position -= Reference;
-	
-		if (dx != 0)
-		{
-			float DeltaX = (float)dx * Sensitivity;
+		OrbitalCamera();
+	}
 
-			X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-			Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-			Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-		}
-		
-		if (dy != 0)
-		{
-			float DeltaY = (float)dy * Sensitivity;
+	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
+	{
+		Position = vec3(0.0f, 4.0f, 9.0f);
 
-			Y = rotate(Y, DeltaY, X);
-			Z = rotate(Z, DeltaY, X);
-
-			if (Y.y < 0.0f)
-			{
-				Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
-				Y = cross(Z, X);
-			}
-		}
-	
-		Position = Reference + Z * length(Position);
+		vec3 pivot(0.0f, 0.0f, 0.0f);
+		LookAt(pivot);		
 	}
 
 	// Recalculate matrix -------------
 	CalculateViewMatrix();
 
 	return UPDATE_CONTINUE;
+}
+
+void ModuleCamera3D::OrbitalCamera()
+{
+	int dx = -App->input->GetMouseXMotion();
+	int dy = -App->input->GetMouseYMotion();
+
+	float Sensitivity = 0.25f;
+
+	Position -= Reference;
+
+	if (dx != 0)
+	{
+		float DeltaX = (float)dx * Sensitivity;
+
+		X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+		Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+		Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+	}
+
+	if (dy != 0)
+	{
+		float DeltaY = (float)dy * Sensitivity;
+
+		Y = rotate(Y, DeltaY, X);
+		Z = rotate(Z, DeltaY, X);
+
+		if (Y.y < 0.0f)
+		{
+			Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
+			Y = cross(Z, X);
+		}
+	}
+
+	Position = Reference + Z * length(Position);
 }
 
 // -----------------------------------------------------------------

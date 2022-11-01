@@ -21,6 +21,9 @@ struct StoreMesh
 	uint id_vertex = 0; // unique vertex in VRAM
 	uint num_vertex = 0;
 	float* vertex = nullptr;
+	uint id_texcoords = 0; // unique in VRAM
+	uint num_texcoords = 0;
+	float* texcoords = nullptr;
 
 	void Draw();
 };
@@ -35,7 +38,7 @@ public:
 	
 
 	bool Init();
-	update_status PostUpdate(float dt);	
+	update_status Update(float dt);	
 	bool CleanUp();	
 
 public:

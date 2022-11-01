@@ -65,6 +65,14 @@ update_status imguiMenu::Update(float dt)
 			{
 				App->renderer3D->sphereExist = !App->renderer3D->sphereExist;
 			}
+			if (ImGui::MenuItem("Car"))
+			{
+				App->renderer3D->carExist = !App->renderer3D->carExist;
+			}
+			if (ImGui::MenuItem("Golem"))
+			{
+				App->renderer3D->golemExist = !App->renderer3D->golemExist;
+			}
 
 			ImGui::EndMenu();
 		}

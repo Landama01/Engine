@@ -10,6 +10,7 @@
 #include "ModuleCamera3D.h"
 #include "imguiMenu.h"
 #include "LoadMesh.h"
+#include "LoadTexture.h"
 
 #include <vector>
 
@@ -23,6 +24,7 @@ public:
 	ModuleCamera3D* camera;
 	imguiMenu* imgui;
 	LoadMesh* loadMesh;
+	LoadTexture* loadTexture;
 
     bool debug;
     bool renderPrimitives;
