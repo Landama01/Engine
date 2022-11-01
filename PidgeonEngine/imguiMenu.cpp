@@ -165,9 +165,13 @@ void imguiMenu::AboutInfo()
 	ImGui::Spacing();
 	ImGui::Text("3rd Party Libraries used:");
 	ImGui::BulletText("SDL 2.0.24");
-	ImGui::BulletText("Glew 2.1.0");
+	ImGui::BulletText("Glew 2.2.0");
 	ImGui::BulletText("OpenGL 4.6");
 	ImGui::BulletText("ImGui 1.88");
+	ImGui::BulletText("Assimp 5.2.5");
+	ImGui::BulletText("DevIL 1.8.0");
+	ImGui::BulletText("MathGeoLib 1.5");
+	ImGui::BulletText("PhysFS 3.0.2");
 	ImGui::Spacing();
 
 	ImGui::Separator();
