@@ -15,7 +15,7 @@ Current models:
  - Golem
  - Baker House (loaded at the start)
 
-### Camera controls:
+### Camera controls
  - Use "WASD" buttons for moving through the scene and clicking right mouse button and drag for moving camera orientation like an FPS.
  - Hold left SHIFT for increasing camera speed.
  - Spinning the mouse wheels you are able to zoom-in and zoom-out.
