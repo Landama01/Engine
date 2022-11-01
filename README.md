@@ -4,7 +4,8 @@ This engine is a project developed in Videogame Engine subject from Game Design 
 Project repository: https://github.com/Landama01/PidgeonEngine
 ## Team members
 Andreu Landa: https://github.com/Landama01
-## Models
+## Using Engine
+### Models
 Models can be uploaded to the scene through the GameObject button in the bar menu.
 
 Current models:
